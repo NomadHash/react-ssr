@@ -1,0 +1,61 @@
+{
+  "name": "react-ssr",
+  "version": "1.0.0",
+  "description": "react-ssr",
+  "main": "index.js",
+  "scripts": {
+    "start": "yarn build:dev && node ./dist/server.js",
+    "start:wds": "webpack-dev-server --env=dev --profile",
+    "build:dev": "rm -rf dist/ && NODE_ENV=development yarn build:client && NODE_ENV=development yarn build:server",
+    "build:server": "webpack --env=server --progress --profile",
+    "build:client": "webpack --env=client --progress --profile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NomadHash/react-ssr.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NomadHash/react-ssr/issues"
+  },
+  "homepage": "https://github.com/NomadHash/react-ssr#readme",
+  "dependencies": {
+    "@loadable/component": "^5.15.0",
+    "@loadable/server": "^5.15.1",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "babel-loader": "^8.2.3",
+    "express": "^4.17.1",
+    "html-webpack-plugin": "^5.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^5.3.0",
+    "styled-components": "^5.3.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.2",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.16.0",
+    "@loadable/babel-plugin": "^5.13.2",
+    "@loadable/webpack-plugin": "^5.15.1",
+    "@types/express": "^4.17.13",
+    "@types/loadable__component": "^5.13.4",
+    "@types/loadable__server": "^5.12.6",
+    "@types/react-helmet": "^6.1.4",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/styled-components": "^5.1.15",
+    "@types/webpack-dev-middleware": "^5.0.2",
+    "@types/webpack-env": "^1.16.3",
+    "@types/webpack-hot-middleware": "^2.25.5",
+    "mini-css-extract-plugin": "^2.4.5",
+    "webpack-dev-middleware": "^5.2.2",
+    "webpack-hot-middleware": "^2.25.1",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
