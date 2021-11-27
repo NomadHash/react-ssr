@@ -12,9 +12,12 @@
     "noImplicitThis": false,
 
     /* Module Resolution Options */
+    "esModuleInterop": true,
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "esModuleInterop": true
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
+    }
   },
   "exclude": ["**/*.test.*", "**/*.spec.*", "node_modules", "dist", "public"]
 }

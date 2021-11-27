@@ -40,11 +40,6 @@ const getConfig = (target) => ({
           "babel-loader",
           {
             loader: "ts-loader",
-            options: {
-              //   getCustomTransformers: () => ({
-              //     before: [styledComponentsTransformer],
-              //   }),
-            },
           },
         ],
       },
@@ -56,13 +51,9 @@ const getConfig = (target) => ({
   },
 
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: [".ts", ".js", ".tsx", "jsx"],
     alias: {
-      pages: path.resolve("src/pages/"),
-      components: path.resolve("src/components/"),
-      actions: path.resolve("src/store/actions/"),
-      reducers: path.resolve("src/store/reducers/"),
-      util: path.resolve("src/util/"),
+      "@src": path.resolve(__dirname, "src"),
     },
   },
 

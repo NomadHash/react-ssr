@@ -37,9 +37,11 @@ module.exports = {
       },
     ],
   },
-
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: [".ts", ".js", ".tsx", "jsx"],
+    alias: {
+      "@src": path.resolve(__dirname, "src"),
+    },
   },
 
   //! 서버에서 필요없는 node_modules 를 제외
