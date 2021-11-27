@@ -1,11 +1,19 @@
 import path from "path";
 import React from "react";
 import express from "express";
+import { CacheProvider } from "@emotion/react";
 import { renderToString } from "react-dom/server";
+import createEmotionServer from "@emotion/server/create-instance";
+import createCache from "@emotion/cache";
 import { StaticRouter } from "react-router-dom";
 import Helmet from "react-helmet";
 import { ChunkExtractor } from "@loadable/server";
 import App from "./App";
+
+const key = "custom";
+const cache = createCache({ key });
+const { extractCriticalToChunks, constructStyleTagsFromChunks } =
+  createEmotionServer(cache);
 
 const app = express();
 
@@ -39,12 +47,15 @@ app.get("*", (req, res) => {
 
   const jsx = webExtractor.collectChunks(
     <StaticRouter location={req.url} context={context}>
+      <CacheProvider value={cache}></CacheProvider>
       <App />
     </StaticRouter>
   );
 
   const html = renderToString(jsx);
   const helmet = Helmet.renderStatic();
+  const chunks = extractCriticalToChunks(html);
+  const styles = constructStyleTagsFromChunks(chunks);
 
   res.set("content-type", "text/html");
   res.send(`
@@ -56,6 +67,7 @@ app.get("*", (req, res) => {
           ${helmet.title.toString()}
           ${webExtractor.getLinkTags()}
           ${webExtractor.getStyleTags()}
+          ${styles}
         </head>
         <body>
           <div id="root">${html}</div>
