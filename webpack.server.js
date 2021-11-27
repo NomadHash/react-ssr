@@ -1,15 +1,16 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+/* eslint-disable max-len */
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 /*
 번들 파일에 불필요한 node_modules 를 빼주는 역할을 한다.
 SSR은 js 파일이 클라이언트에게 전송되어 실행되기 전까지, 초기화면의 html string만 렌더링해 먼저 보여주는 개념이기에 서버에서 렌더링된 파일에는 node_modules가 필요없다..
 */
 
 module.exports = {
-  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 
   //* node.js 환경에서 돌아갈 파일을 컴파일할 때 쓰는 설정
-  target: "node",
+  target: 'node',
 
   node: false,
   /*
@@ -20,27 +21,27 @@ module.exports = {
 
   entry: {
     //* express 서버 위치.
-    server: "./src/server.tsx",
+    server: './src/server.tsx',
   },
 
   output: {
-    path: path.resolve(__dirname, "./dist"),
-    filename: "[name].js",
-    chunkFilename: "[name].js",
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].js',
+    chunkFilename: '[name].js',
   },
 
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: ["babel-loader", "ts-loader"],
+        use: ['babel-loader', 'ts-loader'],
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js", ".tsx", "jsx"],
+    extensions: ['.ts', '.js', '.tsx', 'jsx'],
     alias: {
-      "@src": path.resolve(__dirname, "src"),
+      '@src': path.resolve(__dirname, 'src'),
     },
   },
 

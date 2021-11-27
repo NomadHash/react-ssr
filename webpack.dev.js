@@ -1,10 +1,10 @@
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
-  mode: "development",
-  entry: "./src/index.tsx",
+  mode: 'development',
+  entry: './src/index.tsx',
   devServer: {
     historyApiFallback: true,
     port: 3000,
@@ -15,23 +15,23 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: ["babel-loader", "ts-loader"],
+        use: ['babel-loader', 'ts-loader'],
       },
     ],
   },
 
   resolve: {
-    extensions: [".ts", ".js", ".tsx", "jsx"],
+    extensions: ['.ts', '.js', '.tsx', 'jsx'],
     alias: {
-      "@src": path.resolve(__dirname, "src"),
+      '@src': path.resolve(__dirname, 'src'),
     },
   },
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      filename: "index.html",
-      template: "/public/index_dev.html",
+      filename: 'index.html',
+      template: '/public/index_dev.html',
     }),
   ],
 };

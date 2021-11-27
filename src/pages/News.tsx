@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import { jsx, css } from "@emotion/react";
-import TestComponent from "@src/components/TestComponent";
-import { Helmet } from "react-helmet";
+import { jsx, css } from '@emotion/react';
+import TestComponent from '@src/components/TestComponent';
+import { Helmet } from 'react-helmet';
+
 const style = css`
   color: hotpink;
 `;

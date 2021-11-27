@@ -1,8 +1,8 @@
-import ReactDOM, { hydrate } from "react-dom";
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { loadableReady } from "@loadable/component";
-import App from "./App";
+import ReactDOM from 'react-dom';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { loadableReady } from '@loadable/component';
+import App from './App';
 
 loadableReady(() => {
   const renderMethod = module.hot ? ReactDOM.render : ReactDOM.hydrate;
@@ -10,7 +10,7 @@ loadableReady(() => {
     <BrowserRouter>
       <App />
     </BrowserRouter>,
-    document.getElementById("root")
+    document.getElementById('root'),
   );
 });
 

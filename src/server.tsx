@@ -1,22 +1,25 @@
-import express from "express";
-import path from "path";
-import React from "react";
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom";
-import { Helmet } from "react-helmet";
-import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/extensions */
+/* eslint-disable global-require */
+import express from 'express';
+import path from 'path';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 
 const app = express();
 
-if (process.env.NODE_ENV !== "production") {
-  const webpack = require("webpack");
-  const webpackConfig = require("../webpack.client.js").map((config: any) => {
-    config.output.path = config.output.path.replace("dist/dist/", "dist/");
+if (process.env.NODE_ENV !== 'production') {
+  const webpack = require('webpack');
+  const webpackConfig = require('../webpack.client.js').map((config: any) => {
+    config.output.path = config.output.path.replace('dist/dist/', 'dist/');
     return config;
   });
 
-  const webpackDevMiddleware = require("webpack-dev-middleware");
-  const webpackHotMiddleware = require("webpack-hot-middleware");
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
 
   const compiler = webpack(webpackConfig);
 
@@ -24,7 +27,7 @@ if (process.env.NODE_ENV !== "production") {
     webpackDevMiddleware(compiler, {
       publicPath: webpackConfig[0].output.publicPath,
       writeToDisk: true,
-    })
+    }),
   );
 
   app.use(webpackHotMiddleware(compiler));
@@ -32,9 +35,9 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use(express.static(path.resolve(__dirname)));
 
-app.get("*", (req, res) => {
-  const nodeStats = path.resolve(__dirname, "./node/loadable-stats.json");
-  const webStats = path.resolve(__dirname, "./web/loadable-stats.json");
+app.get('*', (req, res) => {
+  const nodeStats = path.resolve(__dirname, './node/loadable-stats.json');
+  const webStats = path.resolve(__dirname, './web/loadable-stats.json');
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
   const { default: App } = nodeExtractor.requireEntrypoint();
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
@@ -52,13 +55,9 @@ app.get("*", (req, res) => {
   const html = renderToString(jsx);
   const helmet = Helmet.renderStatic();
 
-  res.set("content-type", "text/html");
+  res.set('content-type', 'text/html');
 
-  const createPage = (tags: {
-    scripts: string;
-    links: string;
-    styles: string;
-  }) => {
+  const createPage = (tags: { scripts: string; links: string; styles: string }) => {
     const { scripts, links, styles } = tags;
     return `
     <!DOCTYPE html>
@@ -86,4 +85,5 @@ app.get("*", (req, res) => {
   res.send(createPage(tags));
 });
 
-app.listen(3003, () => console.log("Server started http://localhost:3003"));
+// eslint-disable-next-line no-console
+app.listen(3003, () => console.log('Server started http://localhost:3003'));
