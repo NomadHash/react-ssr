@@ -42,12 +42,7 @@ export const fetchTodo = createAsyncThunk<
 export const todoSlice = createSlice({
   name: 'todo',
   initialState,
-  reducers: {
-    clearTodo: (state) => {
-      // eslint-disable-next-line no-unused-vars
-      state = initialState;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchTodo.pending, (state) => {
       state.loading = true;
@@ -62,6 +57,6 @@ export const todoSlice = createSlice({
     });
   },
 });
-export const { clearTodo } = todoSlice.actions;
+
 export const selectTodo = (state: RootState) => state.todo;
 export default todoSlice.reducer;

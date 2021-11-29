@@ -11,8 +11,7 @@ import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
 
 import { createStore } from './store/index';
-import routes from './routes';
-import { clearTodo } from './store/todo';
+import { routes } from './routes';
 
 const app = express();
 
@@ -46,17 +45,17 @@ app.get('*', (req, res) => {
   const { default: App } = nodeExtractor.requireEntrypoint();
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
   const context = {};
-  // eslint-disable-next-line no-undef
 
   const store = createStore();
-  const promises = routes.reduce((actions, route: any) => {
-    const requestInfo = matchPath(req.url, route.path);
+  const promises = routes.reduce((actions, route) => {
+    const isCurrentPath = matchPath(req.url, route.path);
 
-    if (requestInfo && route.component && route.getInitialData) {
+    if (isCurrentPath && route.component && route.getInitialData) {
       actions.push(Promise.resolve(store.dispatch(route.getInitialData())));
     }
     return actions;
   }, []);
+
   Promise.all(promises).then(() => {
     res.set('content-type', 'text/html');
     const jsx = (
@@ -105,7 +104,6 @@ app.get('*', (req, res) => {
       styles: webExtractor.getStyleTags(),
     };
     res.send(createPage(tags));
-    store.dispatch(clearTodo());
   });
 });
 

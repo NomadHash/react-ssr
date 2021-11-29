@@ -7,6 +7,7 @@ import App from './App';
 import { createStore } from './store';
 
 const store = createStore(window.__APP_INITIAL_STATE__);
+delete window.__APP_INITIAL_STATE__;
 
 loadableReady(() => {
   const renderMethod = module.hot ? ReactDOM.render : ReactDOM.hydrate;
