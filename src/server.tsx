@@ -12,6 +12,7 @@ import serialize from 'serialize-javascript';
 
 import { store } from './store/index';
 import routes from './routes';
+import { clearTodo } from './store/todo';
 
 const app = express();
 
@@ -38,8 +39,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.use(express.static(path.resolve(__dirname)));
-
 app.get('*', (req, res) => {
+  store.dispatch(clearTodo());
   const nodeStats = path.resolve(__dirname, './node/loadable-stats.json');
   const webStats = path.resolve(__dirname, './web/loadable-stats.json');
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
@@ -91,6 +92,7 @@ app.get('*', (req, res) => {
       </html>
   `;
       const finalState = store.getState();
+
       const finalHtml = initialHtml.replace(
         '<!--initialState-->',
         `window.__APP_INITIAL_STATE__ = ${serialize(finalState)};`,
