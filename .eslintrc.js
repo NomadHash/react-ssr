@@ -55,9 +55,15 @@ module.exports = {
       },
     ],
     'react/prop-types': 'off',
-    'max-len': ['error', 100],
+    'max-len': ['error', 200],
     'react/function-component-definition': 'off',
     'import/no-import-module-exports': 'off',
+    'no-param-reassign': 'off',
+    'no-plusplus': 'off',
+    'import/prefer-default-export': 'off',
+    'consistent-return': 'off',
+    'no-underscore-dangle': 'off',
+    'global-require': 'off',
   },
 
   overrides: [

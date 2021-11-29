@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/extensions */
-/* eslint-disable global-require */
 import express from 'express';
 import path from 'path';
 import React from 'react';
@@ -8,6 +7,11 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
+import { Provider } from 'react-redux';
+import serialize from 'serialize-javascript';
+
+import { store } from './store/index';
+import routes from './routes';
 
 const app = express();
 
@@ -41,30 +45,40 @@ app.get('*', (req, res) => {
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
   const { default: App } = nodeExtractor.requireEntrypoint();
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
-
   const context = {};
+  // eslint-disable-next-line no-undef
 
-  const jsx = (
-    <ChunkExtractorManager extractor={webExtractor}>
-      <StaticRouter location={req.url} context={context}>
-        <App />
-      </StaticRouter>
-    </ChunkExtractorManager>
-  );
+  const promises = routes.reduce((actions, route: any) => {
+    if (route.component && route.getInitialData) {
+      actions.push(Promise.resolve(store.dispatch(route.getInitialData())));
+    }
+    return actions;
+  }, []);
 
-  const html = renderToString(jsx);
-  const helmet = Helmet.renderStatic();
+  Promise.all(promises).then(() => {
+    res.set('content-type', 'text/html');
+    const jsx = (
+      <ChunkExtractorManager extractor={webExtractor}>
+        <Provider store={store}>
+          <StaticRouter location={req.url} context={context}>
+            <App />
+          </StaticRouter>
+        </Provider>
+      </ChunkExtractorManager>
+    );
 
-  res.set('content-type', 'text/html');
+    const html = renderToString(jsx);
+    const helmet = Helmet.renderStatic();
 
-  const createPage = (tags: { scripts: string; links: string; styles: string }) => {
-    const { scripts, links, styles } = tags;
-    return `
+    const createPage = (tags: { scripts: string; links: string; styles: string }) => {
+      const { scripts, links, styles } = tags;
+      const initialHtml = `
     <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta name="viewport" content="width=device-width, user-scalable=no">
           <meta name="google" content="notranslate">
+           <script><!--initialState--></script>
           ${helmet.title.toString()}
           ${links}
           ${styles}
@@ -75,14 +89,21 @@ app.get('*', (req, res) => {
         </body>
       </html>
   `;
-  };
+      const finalState = store.getState();
+      const finalHtml = initialHtml.replace(
+        '<!--initialState-->',
+        `window.__APP_INITIAL_STATE__ = ${serialize(finalState)};`,
+      );
+      return finalHtml;
+    };
 
-  const tags = {
-    scripts: webExtractor.getScriptTags(),
-    links: webExtractor.getLinkTags(),
-    styles: webExtractor.getStyleTags(),
-  };
-  res.send(createPage(tags));
+    const tags = {
+      scripts: webExtractor.getScriptTags(),
+      links: webExtractor.getLinkTags(),
+      styles: webExtractor.getStyleTags(),
+    };
+    res.send(createPage(tags));
+  });
 });
 
 // eslint-disable-next-line no-console
