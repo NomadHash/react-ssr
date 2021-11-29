@@ -7,13 +7,13 @@ export default [
     path: '/counter',
     component: CounterPage,
     exact: true,
-    getInitialData: () => {
-      return fetchTodo();
-    },
   },
   {
     path: '/todo',
     component: TodoListPage,
     exact: true,
+    getInitialData: () => {
+      return fetchTodo();
+    },
   },
 ];

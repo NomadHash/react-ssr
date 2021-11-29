@@ -4,7 +4,7 @@ import express from 'express';
 import path from 'path';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
+import { matchPath, StaticRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { Provider } from 'react-redux';
@@ -49,7 +49,8 @@ app.get('*', (req, res) => {
   // eslint-disable-next-line no-undef
 
   const promises = routes.reduce((actions, route: any) => {
-    if (route.component && route.getInitialData) {
+    const requestInfo = matchPath(req.url, route.path);
+    if (requestInfo && route.component && route.getInitialData) {
       actions.push(Promise.resolve(store.dispatch(route.getInitialData())));
     }
     return actions;
