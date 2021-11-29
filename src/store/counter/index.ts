@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { RootState } from '../index';
+import { RootState } from '../../index';
 
 export type CounterState = {
   value: number;

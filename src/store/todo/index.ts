@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as todoApi from '@src/store/todo/todoApi';
-import type { RootState } from '../index';
+import { RootState } from '../..';
 
 export interface ITodo {
   id: number;

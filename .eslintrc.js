@@ -64,6 +64,12 @@ module.exports = {
     'consistent-return': 'off',
     'no-underscore-dangle': 'off',
     'global-require': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 
   overrides: [

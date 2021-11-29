@@ -10,7 +10,7 @@ import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
 
-import { store } from './store/index';
+import { createStore } from './store/index';
 import routes from './routes';
 import { clearTodo } from './store/todo';
 
@@ -40,7 +40,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(express.static(path.resolve(__dirname)));
 app.get('*', (req, res) => {
-  store.dispatch(clearTodo());
   const nodeStats = path.resolve(__dirname, './node/loadable-stats.json');
   const webStats = path.resolve(__dirname, './web/loadable-stats.json');
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
@@ -49,14 +48,15 @@ app.get('*', (req, res) => {
   const context = {};
   // eslint-disable-next-line no-undef
 
+  const store = createStore();
   const promises = routes.reduce((actions, route: any) => {
     const requestInfo = matchPath(req.url, route.path);
+
     if (requestInfo && route.component && route.getInitialData) {
       actions.push(Promise.resolve(store.dispatch(route.getInitialData())));
     }
     return actions;
   }, []);
-
   Promise.all(promises).then(() => {
     res.set('content-type', 'text/html');
     const jsx = (
@@ -92,7 +92,6 @@ app.get('*', (req, res) => {
       </html>
   `;
       const finalState = store.getState();
-
       const finalHtml = initialHtml.replace(
         '<!--initialState-->',
         `window.__APP_INITIAL_STATE__ = ${serialize(finalState)};`,
@@ -106,6 +105,7 @@ app.get('*', (req, res) => {
       styles: webExtractor.getStyleTags(),
     };
     res.send(createPage(tags));
+    store.dispatch(clearTodo());
   });
 });
 
