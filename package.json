@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn build:dev && node ./dist/server.js",
+    "start:production": "yarn build:production && node ./dist/server.js",
     "start:wds": "webpack-dev-server --env=dev --profile",
     "build:dev": "rm -rf dist/ && NODE_ENV=development yarn build:client && NODE_ENV=development yarn build:server",
+    "build:production": "rm -rf dist/ && NODE_ENV=production yarn build:client && NODE_ENV=production yarn build:server",
     "build:server": "webpack --env=server --progress --profile",
     "build:client": "webpack --env=client --progress --profile"
   },
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/NomadHash/react-ssr#readme",
   "dependencies": {
+    "@emotion/cache": "^11.6.0",
     "@emotion/react": "^11.7.0",
     "@emotion/server": "^11.4.0",
     "@loadable/component": "^5.15.0",

@@ -7,7 +7,7 @@ function useFetch<T = unknown, U = unknown>(
   requestData?: U,
 ): Promise<T | any> {
   return (async (): Promise<T | any> => {
-    const urlEndPoint = `http://localhost:3001/3${endPoint}`;
+    const urlEndPoint = `http://localhost:3001${endPoint}`;
     try {
       const { data }: { data: T } = await axios[httpRequestType](urlEndPoint, requestData || null);
       return data;

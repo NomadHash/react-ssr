@@ -1,15 +1,28 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, MiddlewareArray } from '@reduxjs/toolkit';
 import { logger } from 'redux-logger';
 import counterReducer from './counter';
 import todoReducer from './todo';
 
-export const createStore = (initialState?: unknown) =>
-  configureStore({
+const createStoreConfigure = (initialState: unknown) => {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
+  const config = {
     reducer: {
       counter: counterReducer,
       todo: todoReducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
-    devTools: process.env.NODE_ENV === 'development',
+    devTools: isDevelopment,
     preloadedState: initialState,
-  });
+  };
+
+  const middleware = {
+    middleware: (getDefaultMiddleware: () => MiddlewareArray<any>) => getDefaultMiddleware().concat(logger),
+  };
+
+  if (isDevelopment) {
+    return { ...config, ...middleware };
+  }
+  return config;
+};
+
+export const createStore = (initialState?: unknown) => configureStore(createStoreConfigure(initialState));

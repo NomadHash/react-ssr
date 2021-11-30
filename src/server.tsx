@@ -9,12 +9,15 @@ import { Helmet } from 'react-helmet';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
-
+import { CacheProvider } from '@emotion/react';
+import createEmotionServer from '@emotion/server/create-instance';
+import createCache from '@emotion/cache';
 import { createStore } from './store/index';
 import { routes } from './routes';
 
 const app = express();
 
+//* On development
 if (process.env.NODE_ENV !== 'production') {
   const webpack = require('webpack');
   const webpackConfig = require('../webpack.client.js').map((config: any) => {
@@ -24,29 +27,30 @@ if (process.env.NODE_ENV !== 'production') {
 
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
-
   const compiler = webpack(webpackConfig);
-
   app.use(
     webpackDevMiddleware(compiler, {
       publicPath: webpackConfig[0].output.publicPath,
       writeToDisk: true,
     }),
   );
-
   app.use(webpackHotMiddleware(compiler));
 }
 
 app.use(express.static(path.resolve(__dirname)));
 app.get('*', (req, res) => {
+  //* Setup Chunks
   const nodeStats = path.resolve(__dirname, './node/loadable-stats.json');
   const webStats = path.resolve(__dirname, './web/loadable-stats.json');
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
-  const { default: App } = nodeExtractor.requireEntrypoint();
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
+  const { default: App } = nodeExtractor.requireEntrypoint();
   const context = {};
 
+  //* Create new redux store.
   const store = createStore();
+
+  //* Find the getInitialData(server-side fetching) method on every route path. and create Promise Array
   const promises = routes.reduce((actions, route) => {
     const isCurrentPath = matchPath(req.url, route.path);
 
@@ -56,6 +60,7 @@ app.get('*', (req, res) => {
     return actions;
   }, []);
 
+  //* Create page after 'Promise.all'
   Promise.all(promises).then(() => {
     res.set('content-type', 'text/html');
     const jsx = (
@@ -68,11 +73,22 @@ app.get('*', (req, res) => {
       </ChunkExtractorManager>
     );
 
-    const html = renderToString(jsx);
+    //* Create EmotionJS Style cache.
+    const key = 'custom';
+    const cache = createCache({ key });
+    const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(cache);
+
+    //* JSX to string.
+    const html = renderToString(<CacheProvider value={cache}>{jsx}</CacheProvider>);
     const helmet = Helmet.renderStatic();
 
+    //* Create EmotionJS style chunks.
+    const chunks = extractCriticalToChunks(html);
+    const emotionChunkStyles = constructStyleTagsFromChunks(chunks);
+
+    //* Create page with chunks
     const createPage = (tags: { scripts: string; links: string; styles: string }) => {
-      const { scripts, links, styles } = tags;
+      const { scripts, links } = tags;
       const initialHtml = `
     <!DOCTYPE html>
       <html lang="en">
@@ -82,7 +98,7 @@ app.get('*', (req, res) => {
            <script><!--initialState--></script>
           ${helmet.title.toString()}
           ${links}
-          ${styles}
+          ${emotionChunkStyles}
           </head>
         <body>
           <div id="root">${html}</div>
@@ -90,6 +106,8 @@ app.get('*', (req, res) => {
         </body>
       </html>
   `;
+
+      //*  Passing the server's redux store state to the client
       const finalState = store.getState();
       const finalHtml = initialHtml.replace(
         '<!--initialState-->',
@@ -98,11 +116,13 @@ app.get('*', (req, res) => {
       return finalHtml;
     };
 
+    //* Chunks from webExtractor (@loadable/server)
     const tags = {
       scripts: webExtractor.getScriptTags(),
       links: webExtractor.getLinkTags(),
       styles: webExtractor.getStyleTags(),
     };
+
     res.send(createPage(tags));
   });
 });
