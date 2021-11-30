@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-expressions */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as todoApi from '@src/store/todo/todoApi';
+import useFetch from '@src/hooks/useFetch';
 import { RootState } from '../..';
 
 export interface ITodo {
@@ -8,21 +7,21 @@ export interface ITodo {
   title: string;
   content: string;
 }
-
 export interface ITodoState {
   todos: ITodo[];
   error: string | undefined;
   loading: boolean;
 }
-
 const initialState: ITodoState = {
   todos: [],
   error: '',
   loading: false,
 };
 
+//* prefix
 const prefix = 'todo';
 
+//* createAsyncThunk
 export const fetchTodo = createAsyncThunk<
   ITodo[],
   void,
@@ -30,15 +29,11 @@ export const fetchTodo = createAsyncThunk<
     rejectValue: string;
   }
 >(`${prefix}/fetchTodo`, async (_arg, { rejectWithValue }) => {
-  try {
-    return await todoApi.getTodo();
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue(error.message);
-    }
-  }
+  const apiRequest = await useFetch<ITodo[]>(rejectWithValue, '/todo', 'get');
+  return apiRequest;
 });
 
+//* createSlice
 export const todoSlice = createSlice({
   name: 'todo',
   initialState,
