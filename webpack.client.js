@@ -80,7 +80,7 @@ const getConfig = (target) => ({
   resolve: {
     extensions: ['.ts', '.js', '.tsx', 'jsx'],
     alias: {
-      '@src': path.resolve(__dirname, 'src'),
+      '@src': path.resolve('src/'),
     },
   },
 

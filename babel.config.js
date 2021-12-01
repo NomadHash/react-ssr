@@ -24,14 +24,19 @@ module.exports = (api) => {
       '@babel/preset-typescript',
     ],
     plugins: [
+      [
+        'babel-plugin-styled-components',
+        {
+          ssr: true,
+        },
+      ],
       '@loadable/babel-plugin',
       [
         'module-resolver',
         {
-          root: ['.'],
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
           alias: {
-            '@src': '/src',
+            '@src': './src',
           },
         },
       ],

@@ -3,18 +3,23 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { loadableReady } from '@loadable/component';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from './assets/styles/theme-components';
+import GlobalStyle from './assets/styles/GlobalStyle';
 import App from './App';
 import { createStore } from './store';
+import theme from './assets/styles/theme';
 
 const store = createStore(window.__APP_INITIAL_STATE__);
 delete window.__APP_INITIAL_STATE__;
-
 loadableReady(() => {
   const renderMethod = module.hot ? ReactDOM.render : ReactDOM.hydrate;
   renderMethod(
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <GlobalStyle />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
       </BrowserRouter>
     </Provider>,
     document.getElementById('root'),

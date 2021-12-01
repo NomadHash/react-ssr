@@ -7,10 +7,11 @@ const Header = loadable(() => import(/* webpackChunkName: "Header" */ './compone
 const Home = loadable(() => import(/* webpackChunkName: "Home" */ './pages/Home'));
 const CounterPage = loadable(() => import(/* webpackChunkName: "Counter" */ './pages/CounterPage'));
 const TodoListPage = loadable(() => import(/* webpackChunkName: "TodoList" */ './pages/TodoListPage'));
+const ImagePage = loadable(() => import(/* webpackChunkName: "ImagePage" */ './pages/ImagePage'));
 
 const App: React.FC = () => {
   return (
-    <div>
+    <>
       <Helmet>
         <title>App</title>
       </Helmet>
@@ -19,8 +20,9 @@ const App: React.FC = () => {
         <Route exact path="/" render={() => <Home />} />
         <Route path="/counter" render={() => <CounterPage />} />
         <Route path="/todo" render={() => <TodoListPage />} />
+        <Route path="/image" render={() => <ImagePage />} />
       </Switch>
-    </div>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ const Header: React.FC = () => (
     <Link to="/">Home</Link>
     <Link to="/counter">CounterPage</Link>
     <Link to="/todo">TodoListPage</Link>
+    <Link to="/image">ImagePage</Link>
   </header>
 );
 

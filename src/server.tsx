@@ -9,9 +9,9 @@ import { Helmet } from 'react-helmet';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
-import { CacheProvider } from '@emotion/react';
-import createEmotionServer from '@emotion/server/create-instance';
-import createCache from '@emotion/cache';
+import { ServerStyleSheet, ThemeProvider } from 'styled-components';
+import GlobalStyle from '@src/assets/styles/GlobalStyle';
+import theme from '@src/assets/styles/theme';
 import { createStore } from './store/index';
 import { routes } from './routes';
 
@@ -67,27 +67,25 @@ app.get('*', (req, res) => {
       <ChunkExtractorManager extractor={webExtractor}>
         <Provider store={store}>
           <StaticRouter location={req.url} context={context}>
-            <App />
+            <GlobalStyle />
+            <ThemeProvider theme={theme}>
+              <App />
+            </ThemeProvider>
           </StaticRouter>
         </Provider>
       </ChunkExtractorManager>
     );
-
-    //* Create EmotionJS Style cache.
-    const key = 'custom';
-    const cache = createCache({ key });
-    const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(cache);
-
+    //* Create new Styled-components style sheet
+    const sheet = new ServerStyleSheet();
     //* JSX to string.
-    const html = renderToString(<CacheProvider value={cache}>{jsx}</CacheProvider>);
+    const html = renderToString(sheet.collectStyles(jsx));
     const helmet = Helmet.renderStatic();
 
-    //* Create EmotionJS style chunks.
-    const chunks = extractCriticalToChunks(html);
-    const emotionChunkStyles = constructStyleTagsFromChunks(chunks);
+    //* */ Get all style tags from ServerStyleSheet (styled-components)
+    const styles = sheet.getStyleTags();
 
-    //* Create page with chunks
-    const createPage = (tags: { scripts: string; links: string; styles: string }) => {
+    //* Create HTML page
+    const createPage = (tags: { scripts: string; links: string }) => {
       const { scripts, links } = tags;
       const initialHtml = `
     <!DOCTYPE html>
@@ -98,7 +96,7 @@ app.get('*', (req, res) => {
            <script><!--initialState--></script>
           ${helmet.title.toString()}
           ${links}
-          ${emotionChunkStyles}
+          ${styles}
           </head>
         <body>
           <div id="root">${html}</div>
