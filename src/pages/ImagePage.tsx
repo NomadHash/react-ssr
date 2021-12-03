@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageList from '@src/components/ImageList';
+import ImageList from '@components/ImageList';
 
 const ImagePage: React.FC = () => {
   return <ImageList />;

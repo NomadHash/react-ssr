@@ -1,7 +1,7 @@
 import { configureStore, MiddlewareArray } from '@reduxjs/toolkit';
 import { logger } from 'redux-logger';
-import counterReducer from './counter';
-import todoReducer from './todo';
+import counterReducer from '@store/counter';
+import todoReducer from '@store/todo';
 
 const createStoreConfigure = (initialState: unknown) => {
   const isDevelopment = process.env.NODE_ENV === 'development';

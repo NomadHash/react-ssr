@@ -12,7 +12,7 @@ import serialize from 'serialize-javascript';
 import { ServerStyleSheet, ThemeProvider } from 'styled-components';
 import GlobalStyle from '@src/assets/styles/GlobalStyle';
 import theme from '@src/assets/styles/theme';
-import { createStore } from './store/index';
+import { createStore } from '@store/index';
 import { routes } from './routes';
 
 const app = express();

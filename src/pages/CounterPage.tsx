@@ -1,6 +1,6 @@
 import React from 'react';
-import Counter from '@src/components/Counter';
-import Footer from '@src/components/Footer';
+import Counter from '@components/Counter';
+import Footer from '@components/Footer';
 import { Helmet } from 'react-helmet';
 
 const CounterPage: React.FC = () => (

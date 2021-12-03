@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from '@src/store/hooks';
-import { fetchTodo, selectTodo } from '@src/store/todo';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { fetchTodo, selectTodo } from '@store/todo';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 
@@ -8,10 +8,12 @@ const TodoListPage: React.FC = () => {
   const { todos } = useAppSelector(selectTodo);
 
   useEffect(() => {
+    console.log(todos);
+    console.log('change!');
     if (!todos.length) {
       dispatch(fetchTodo());
     }
-  }, []);
+  }, [todos]);
 
   return (
     <div>
@@ -19,6 +21,7 @@ const TodoListPage: React.FC = () => {
         <title>TodoListPage</title>
       </Helmet>
       <h1>Todo page</h1>
+
       <ul>
         {todos.map(({ id, title, content }) => (
           <li key={id}>

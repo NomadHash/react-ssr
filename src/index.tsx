@@ -3,11 +3,11 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { loadableReady } from '@loadable/component';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from './assets/styles/theme-components';
-import GlobalStyle from './assets/styles/GlobalStyle';
-import App from './App';
+import { ThemeProvider } from '@assets/styles/theme-components';
+import GlobalStyle from '@assets/styles/GlobalStyle';
 import { createStore } from './store';
-import theme from './assets/styles/theme';
+import theme from '@assets/styles/theme';
+import App from './App';
 
 const store = createStore(window.__APP_INITIAL_STATE__);
 delete window.__APP_INITIAL_STATE__;

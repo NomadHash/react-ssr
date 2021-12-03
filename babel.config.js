@@ -37,6 +37,11 @@ module.exports = (api) => {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
           alias: {
             '@src': './src',
+            '@components': './src/components',
+            '@assets': './src/assets',
+            '@lib': './src/lib',
+            '@pages': './src/pages',
+            '@store': './src/store',
           },
         },
       ],

@@ -1,5 +1,5 @@
-import { decrement, increment, selectCount } from '@src/store/counter';
-import { useAppDispatch, useAppSelector } from '@src/store/hooks';
+import { decrement, increment, selectCount } from '@store/counter';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import React from 'react';
 
 const Counter: React.FC = () => {

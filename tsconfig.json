@@ -16,7 +16,12 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"],
+      "@lib/*": ["src/lib/*"],
+      "@pages/*": ["src/pages/*"],
+      "@store/*": ["src/store/*"]
     }
   },
   "exclude": ["**/*.test.*", "**/*.spec.*", "node_modules", "dist", "public"]

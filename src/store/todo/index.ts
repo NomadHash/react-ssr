@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import useFetch from '@src/hooks/useFetch';
+import useFetch from '@lib/hooks/useFetch';
 import { RootState } from '../..';
 
 export interface ITodo {
@@ -18,10 +18,14 @@ const initialState: ITodoState = {
   loading: false,
 };
 
-//* prefix
+// prefix
 const prefix = 'todo';
 
-//* createAsyncThunk
+//? =====================
+//? createAsyncThunk
+//? =====================
+
+//* Fetch todo
 export const fetchTodo = createAsyncThunk<
   ITodo[],
   void,
@@ -42,6 +46,7 @@ export const todoSlice = createSlice({
     builder.addCase(fetchTodo.pending, (state) => {
       state.loading = true;
     });
+
     builder.addCase(fetchTodo.fulfilled, (state, action: PayloadAction<ITodo[]>) => {
       state.todos = action.payload;
       state.error = '';
