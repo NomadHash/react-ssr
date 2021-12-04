@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const Dotenv = require('dotenv-webpack');
 const devMode = process.env.NODE_ENV !== 'production';
 const hotMiddlewareScript = `webpack-hot-middleware/client?name=web&path=/__webpack_hmr&timeout=20000&reload=true`;
 
@@ -85,13 +85,13 @@ const getConfig = (target) => ({
       '@assets': path.resolve('src/assets/'),
       '@lib': path.resolve('src/lib/'),
       '@pages': path.resolve('src/pages/'),
-      '@store': path.resolve('src/store/')
+      '@store': path.resolve('src/store/'),
     },
   },
 
   plugins:
     target === 'web'
-      ? [new LoadablePlugin(), new MiniCssExtractPlugin(), new webpack.HotModuleReplacementPlugin()]
+      ? [new Dotenv(), new LoadablePlugin(), new MiniCssExtractPlugin(), new webpack.HotModuleReplacementPlugin()]
       : [new LoadablePlugin(), new MiniCssExtractPlugin()],
 
   externals: target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,

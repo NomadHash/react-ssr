@@ -18,14 +18,8 @@ const initialState: ITodoState = {
   loading: false,
 };
 
-// prefix
 const prefix = 'todo';
 
-//? =====================
-//? createAsyncThunk
-//? =====================
-
-//* Fetch todo
 export const fetchTodo = createAsyncThunk<
   ITodo[],
   void,
@@ -33,11 +27,10 @@ export const fetchTodo = createAsyncThunk<
     rejectValue: string;
   }
 >(`${prefix}/fetchTodo`, async (_arg, { rejectWithValue }) => {
-  const apiRequest = await useFetch<ITodo[]>(rejectWithValue, '/todo', 'get');
+  const apiRequest = await useFetch<ITodo[], null>(rejectWithValue, '/todo', 'get');
   return apiRequest;
 });
 
-//* createSlice
 export const todoSlice = createSlice({
   name: 'todo',
   initialState,
